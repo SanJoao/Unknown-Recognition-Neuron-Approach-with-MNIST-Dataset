@@ -121,3 +121,21 @@ The "Unknown Recognition Neuron" experiment aimed to investigate the effectivene
 #### Conclusion
 This experiment demonstrates a potential method for improving OOD detection in neural networks by incorporating an additional 'unknown' output neuron. Future work will focus on refining the model architecture and exploring other datasets to further validate and enhance this approach.
 
+---
+### Project Directory Overview
+
+**1. `model.h5`:** Contains the trained CNN model including architecture, weights, and configuration.
+
+**2. `Combined__Training` and `Combined__Test`:** These folders hold the datasets for training and testing. Each includes:
+   - **Noise:** Random noise images.
+   - **NMAH:** Grayscale images from the National Museum of American History, resized to 28x28 pixels.
+   - **Quick_Draw:** Processed grayscale images from the Quick, Draw! dataset.
+
+**3. `Other__Test`:** Contains processed evaluation datasets, each with 1000 grayscale images (28x28 pixels) from various sources such as Cifar-10, ImageNet, EMNIST, Fashion MNIST, additional MNIST images, MNIST-M, and Omniglot.
+
+**4. MNIST Dataset:** Not included in the folders due to easy availability for import during training and testing phases.
+
+### Additional Notes
+- **Image Format:** All images are formatted to grayscale and resized to 28x28 pixels to match the model’s input requirements.
+- **Usage:** The `model.h5` file can be directly loaded with TensorFlow/Keras for further evaluation or modification.
+
