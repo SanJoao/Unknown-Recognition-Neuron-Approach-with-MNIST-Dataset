@@ -30,71 +30,94 @@ The "Unknown Recognition Neuron" experiment aimed to investigate the effectivene
 #### Challenges and Observations
 - **Scalability**: While the experiment showed promising results, the scalability of adding an 'unknown' neuron when faced with a broader range of out-of-distribution images remains a question.
 - **Data Dependency**: The effectiveness of the 'unknown' neuron heavily depends on the diversity and representativeness of the non-digit images used during training.
+  
 
-#### Code and Reproducibility
-```python
-# Code setup for training the CNN model
-import wandb
-from tensorflow.keras.datasets import mnist
-from tensorflow.keras import layers, models
-import numpy as np
-from PIL import Image
-import os
+#### Experiment Setup
 
-# Initialize W&B
-wandb.init(project='cnn_unknown_recognition', entity='sanxuejin')
+1. **Data Preparation**
+   - **MNIST Dataset**: Used as the base dataset for training. Contains images of handwritten digits (0-9).
+   - **Additional Images**: Added images from the Quick, Draw! dataset, the National Museum of American History Dataset, and generated random noise images. These were labeled as 'unknown'.
 
-# Load and preprocess MNIST data
-(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
-train_images = train_images.reshape((-1, 28, 28, 1)) / 255.0
-test_images = test_images.reshape((-1, 28, 28, 1)) / 255.0
+   ```python
+   from tensorflow.keras.datasets import mnist
+   from PIL import Image
+   import numpy as np
+   import os
 
-# Load non-digit images for training and testing
-def load_non_digit_images(folder_path):
-    images, labels = [], []
-    for filename in os.listdir(folder_path):
-        if filename.startswith("Unknown"):
-            img_path = os.path.join(folder_path, filename)
-            img = Image.open(img_path).convert('L')
-            img = np.array(img.resize((28, 28))).reshape(28, 28, 1) / 255.0
-            images.append(img)
-            labels.append(10)  # Label '10' for unknown
-    return np.array(images), np.array(labels)
+   # Load MNIST data
+   (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+   train_images = train_images.reshape((train_images.shape[0], 28, 28, 1))
+   test_images = test_images.reshape((test_images.shape[0], 28, 28, 1))
+   train_images, test_images = train_images / 255.0, test_images / 255.0
 
-# Paths to your non-digit image folders
-train_non_digit_path = '/path/to/training/non-digit/images'
-test_non_digit_path = '/path/to/testing/non-digit/images'
+   def load_non_digit_images(folder_path):
+       images = []
+       labels = []
+       for filename in os.listdir(folder_path):
+           if filename.startswith("Unknown"):
+               img_path = os.path.join(folder_path, filename)
+               img = Image.open(img_path).convert('L')
+               img = img.resize((28, 28))
+               img_array = np.array(img) / 255.0
+               images.append(img_array.reshape(28, 28, 1))
+               labels.append(10)  # Label for 'unknown'
+       return np.array(images), np.array(labels)
 
-# Load non-digit images
-non_digit_train_images, non_digit_train_labels = load_non_digit_images(train_non_digit_path)
-non_digit_test_images, non_digit_test_labels = load_non_digit_images(test_non_digit_path)
+   # Example paths to non-digit image folders
+   non_digit_train_path = "/path/to/training/non_digit_images"
+   non_digit_train_images, non_digit_train_labels = load_non_digit_images(non_digit_train_path)
+   ```
 
-# Combine datasets
-train_images = np.concatenate([train_images, non_digit_train_images])
-train_labels = np.concatenate([train_labels, non_digit_train_labels])
-test_images = np.concatenate([test_images, non_digit_test_images])
-test_labels = np.concatenate([test_labels, non_digit_test_labels])
+2. **Model Architecture**
+   - The model includes convolutional layers followed by max pooling and dense layers, ending with a softmax output layer that has 11 outputs (10 for each digit and 1 for 'unknown').
 
-# Define the CNN model
-model = models.Sequential([
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-    layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(64, (3, 3), activation='relu'),
-    layers.MaxPooling2D((2, 2)),
-    layers.Conv2D(64, (3, 3), activation='relu
+   ```python
+   from tensorflow.keras import layers, models
 
-'),
-    layers.Flatten(),
-    layers.Dense(64, activation='relu'),
-    layers.Dense(11, activation='softmax')  # Including 'unknown' neuron
-])
+   model = models.Sequential([
+       layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+       layers.MaxPooling2D((2, 2)),
+       layers.Conv2D(64, (3, 3), activation='relu'),
+       layers.MaxPooling2D((2, 2)),
+       layers.Conv2D(64, (3, 3), activation='relu'),
+       layers.Flatten(),
+       layers.Dense(64, activation='relu'),
+       layers.Dense(11, activation='softmax')  # Including 'unknown' class
+   ])
+   ```
 
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+3. **Training the Model**
+   - The model is trained using combined datasets, including both MNIST and non-digit images, using sparse categorical crossentropy as the loss function.
 
-# Train the model
-model.fit(train_images, train_labels, epochs=10, validation_data=(test_images, test_labels), callbacks=[wandb.keras.WandbCallback()])
-```
+   ```python
+   model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+   history = model.fit(train_images_combined, train_labels_combined, epochs=10,
+                       validation_data=(test_images_combined, test_labels_combined))
+   ```
 
-#### Future Directions
-- **Experiment with more complex and diverse datasets** to further validate the robustness of the 'unknown' neuron approach.
-- **Explore alternative architectures and training techniques** that might improve the model's ability to generalize from seen to unseen data.
+#### Results and Analysis
+- **Performance**: The model achieved a high accuracy rate in classifying MNIST digits and effectively recognized 'unknown' images.
+- **Confusion Matrix and Classification Report**:
+  - A confusion matrix and classification report were generated to analyze the performance across all classes, highlighting the effectiveness of the 'unknown' neuron.
+
+  ```python
+  from sklearn.metrics import classification_report, confusion_matrix
+  import seaborn as sns
+  import matplotlib.pyplot as plt
+
+  pred_probs = model.predict(test_images_combined)
+  predictions = np.argmax(pred_probs, axis=1)
+  conf_matrix = confusion_matrix(test_labels_combined, predictions)
+
+  plt.figure(figsize=(10, 8))
+  sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues')
+  plt.xlabel('Predicted Labels')
+  plt.ylabel('True Labels')
+  plt.show()
+
+  print(classification_report(test_labels_combined, predictions))
+  ```
+
+#### Conclusion
+This experiment demonstrates a potential method for improving OOD detection in neural networks by incorporating an additional 'unknown' output neuron. Future work will focus on refining the model architecture and exploring other datasets to further validate and enhance this approach.
+
