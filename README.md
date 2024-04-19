@@ -31,7 +31,7 @@ The "Unknown Recognition Neuron" experiment aimed to investigate the effectivene
 - **Scalability**: While the experiment showed promising results, the scalability of adding an 'unknown' neuron when faced with a broader range of out-of-distribution images remains a question.
 - **Data Dependency**: The effectiveness of the 'unknown' neuron heavily depends on the diversity and representativeness of the non-digit images used during training.
   
-
+---
 #### Experiment Setup
 
 1. **Data Preparation**
