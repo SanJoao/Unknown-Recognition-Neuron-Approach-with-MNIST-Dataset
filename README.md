@@ -153,12 +153,14 @@ Below are the key results:
 The high accuracy and diagonal dominance in the confusion matrix suggest that the model has learned to classify these test samples effectively.
 
 **Output Neurons Predictions Across Different Datasets**  
+
 This chart illustrates the predictions across various datasets to understand how well the model identifies non-digit images:
 ![Confusion](https://github.com/SanJoao/Unknown-Recognition-Neuron-Approach-with-MNIST-Dataset/blob/main/results/Output%20neuron%20prediction%20accross%20different%20datasets.png)
 
 When examining the chart, here's the breakdown:
 
-Cifar-10, ImageNet, Fashion MNIST, Omniglot, and additional MNIST datasets: All predictions fall into neuron 10, indicating "unknown." This was expected since these datasets contain non-digit images or distinct variations. The model correctly categorized them as outside its training set, showing it can distinguish typical digit patterns from non-digit patterns.
-EMNIST and MNIST-M datasets:
-EMNIST contains a mix of digits and letters. The non-digit predictions (outside neuron 10) in this dataset suggest that the model identified some digit patterns. This was expected since EMNIST includes digits alongside other characters.
-MNIST-M uses colored variations of the MNIST dataset, potentially causing confusion due to the color variation. The fact that some predictions were outside neuron 10 indicates that the model might have misinterpreted these variations as legitimate digits. This is a learning opportunity, showing that even subtle changes in the dataset might affect model predictions.
+- **Cifar-10, ImageNet, Fashion MNIST, Omniglot, and additional MNIST datasets:** All predictions fall into neuron 10, indicating "unknown." This was expected since these datasets contain non-digit images or distinct variations. The model correctly categorized them as outside its training set, showing it can distinguish typical digit patterns from non-digit patterns.
+
+- **EMNIST and MNIST-M datasets:** 
+  - **EMNIST** contains a mix of digits and letters. The non-digit predictions (outside neuron 10) in this dataset suggest that the model identified some digit patterns. This was expected since EMNIST includes digits alongside other characters.
+  - **MNIST-M** uses colored variations of the MNIST dataset, potentially causing confusion due to the color variation. The fact that some predictions were outside neuron 10 indicates that the model might have misinterpreted these variations as legitimate digits. This is a learning opportunity, showing that even subtle changes in the dataset might affect model predictions.
