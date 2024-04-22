@@ -163,4 +163,18 @@ When examining the chart, here's the breakdown:
 
 - **EMNIST and MNIST-M datasets:** 
   - **EMNIST** contains a mix of digits and letters. The non-digit predictions (outside neuron 10) in this dataset suggest that the model identified some digit patterns. This was expected since EMNIST includes digits alongside other characters.
-  - **MNIST-M** uses colored variations of the MNIST dataset, potentially causing confusion due to the color variation. The fact that some predictions were outside neuron 10 indicates that the model might have misinterpreted these variations as legitimate digits. This is a learning opportunity, showing that even subtle changes in the dataset might affect model predictions.
+  - **MNIST-M** uses colored variations of the MNIST dataset, potentially causing confusion due to the color variation. The fact that some predictions were outside neuron 10 indicates that the model might have misinterpreted these variations as legitimate digits.
+
+1. **MNIST-M Confusion Matrix**:
+![Confusion Matrix MNIST-M](https://github.com/SanJoao/Unknown-Recognition-Neuron-Approach-with-MNIST-Dataset/blob/main/results/confusion%20matrix%20ministm.png)
+   - This dataset introduces additional noise and color, which can be challenging for models trained only on traditional grayscale MNIST digits.
+   - The confusion matrix for MNIST-M demonstrates that most samples were correctly classified as "unknown" (neuron 10). This aligns with expectations, as the network was not trained to recognize the noisy variations in MNIST-M.
+   - Despite the noise, some predictions fall on the diagonal, indicating correct classifications. This suggests that even with the added noise, the network could recognize some digits accurately. The absence of significant misclassifications (off-diagonal predictions) indicates that most predictions either fall within the correct class or default to "unknown."
+
+2. **EMNIST Confusion Matrix**:
+![Confusion Matrix EMNIST](https://github.com/SanJoao/Unknown-Recognition-Neuron-Approach-with-MNIST-Dataset/blob/main/results/confusion%20matrix%20Emnist.png)
+   - EMNIST is an extended version of MNIST that includes letters (both uppercase and lowercase), leading to potential confusion between numbers and letters.
+   - In this confusion matrix, a notable portion of samples is classified as "unknown." This is expected, as the model was trained to recognize numbers, not letters.
+   - However, there's some blue on the diagonal, indicating successful classification of certain numbers. This shows the model's ability to recognize a portion of the EMNIST dataset's numeric content.
+   - The higher misclassifications (off-diagonal predictions) suggest the model had difficulty distinguishing certain letters from numbers. For example, in the "true label 10" row, there are predictions in the 4th column, indicating confusion between a letter and the number 4. This could be due to visual similarities between certain letters and numbers.
+
