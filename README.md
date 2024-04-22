@@ -139,3 +139,16 @@ This experiment demonstrates a potential method for improving OOD detection in n
 - **Image Format:** All images are formatted to grayscale and resized to 28x28 pixels to match the model’s input requirements.
 - **Usage:** The `model.h5` file can be directly loaded with TensorFlow/Keras for further evaluation or modification.
 
+---
+
+**Testing with Reserved Samples**  
+The model was evaluated using a reserved set of test samples from the same dataset used for training. This serves as an initial check to confirm that the model has learned the expected patterns and can accurately classify data it hasn't seen during training. The confusion matrix and performance metrics indicate the level of accuracy and how well the model can distinguish between different classes.
+
+Below are the key results:
+1. **Confusion Matrix**: This shows the count of correct and incorrect predictions for each class. Diagonal elements represent correct predictions, while off-diagonal elements indicate misclassifications.
+   ![Confusion Matrix](https://github.com/SanJoao/Unknown-Recognition-Neuron-Approach-with-MNIST-Dataset/blob/main/results/confusion%20matrix%20Mnist%20dataset%201%20extra%20neuron.png)
+2. **Performance Metrics**: This includes precision, recall, f1-score, and accuracy. These metrics provide a broader understanding of the model's performance.
+   ![Performance Metrics]([attachment:/mnt/data/precision, recall, f1 score, support, accuracy.png](https://github.com/SanJoao/Unknown-Recognition-Neuron-Approach-with-MNIST-Dataset/blob/main/results/precision%2C%20recall%2C%20f1%20score%2C%20support%2C%20accuracy.png))
+
+The high accuracy and diagonal dominance in the confusion matrix suggest that the model has learned to classify these test samples effectively.
+
